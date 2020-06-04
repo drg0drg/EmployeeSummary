@@ -4,10 +4,8 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
-​
 const OUTPUT_DIR = path.resolve(__dirname, "output")
 const outputPath = path.join(OUTPUT_DIR, "team.html");
-​
 const render = require("./lib/htmlRenderer");
 ​
 ​
@@ -33,3 +31,76 @@ const render = require("./lib/htmlRenderer");
 // for further information. Be sure to test out each class and verify it generates an 
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work!```
+
+
+// function to prompt questions on Manager role
+function promptManager() {
+  return inquirer.prompt([{
+      message : "Enter Manager's name:",
+      name : "name"
+  },
+  {
+      message : "Enter Manager's id:",
+      name : "id"
+  },
+  {
+      message : "Enter Manager's email:",
+      name : "email"
+  },
+  {
+      message : "Enter Manager's officeNumber:",
+      name : "officeNumber"
+  }])
+};
+promptManager();
+
+// function to prompt questions on Engineer
+function promptEngineer(){
+  return inquirer.prompt([{
+      message : "Enter Engineer's name:",
+      name : "name"
+  },
+  {
+      message : "Enter Engineer's id:",
+      name : "id"
+  },
+  {
+      message : "Enter Engineer's email:",
+      name : "email"
+  },
+  {
+      message : "Enter Engineer's github:",
+      name : "github"
+  }])
+};
+// function to prompt questions on Intern
+function promptIntern(){
+  return inquirer.prompt([{
+      message : "Enter intern's name:",
+      name : "name"
+  },
+  {
+      message : "Enter intern's id:",
+      name : "id"
+  },
+  {
+      message : "Enter intern's email:",
+      name : "email"
+  },
+  {
+      message : "Enter intern's school:",
+      name : "school"
+  }])
+};
+
+
+// function to determine if the next team member is either an Engineer or an Intern
+function pickEmployeeType (){
+  return inquirer.prompt([{
+    type : "list",
+    message : "What type of employee is next ?", 
+    name : "typeOfEmployee",
+    choices : ["Engineer","Intern"]
+  }, 
+])
+}
