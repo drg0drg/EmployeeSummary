@@ -14,7 +14,10 @@ employees = [];
 
 async function generateTeam() {
   try {
-    const { teamName } = await inquirer.prompt([
+    if (!fs.existsSync("output")) {
+      fs.mkdirSync("output");
+    }
+    let { teamName } = await inquirer.prompt([
       {
         message: "Enter Team's name:",
         name: "teamName",
@@ -89,6 +92,17 @@ async function promptManager() {
       {
         message: "Enter Manager's email:",
         name: "email",
+        //validate if the user input is an actual mail format
+        validate: function (email) {
+          valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+          if (valid) {
+            console.log("  valid email");
+            return true;
+          } else {
+            console.log("\n Please enter a valid email");
+            return false;
+          }
+        },
       },
       {
         message: "Enter Manager's officeNumber:",
@@ -123,6 +137,17 @@ async function promptEngineer() {
       {
         message: "Enter Engineer's email:",
         name: "email",
+        //validate if the user input is an actual mail format
+        validate: function (email) {
+          valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+          if (valid) {
+            console.log("  valid email");
+            return true;
+          } else {
+            console.log("\n Please enter a valid email");
+            return false;
+          }
+        },
       },
       {
         message: "Enter Engineer's github:",
@@ -157,6 +182,17 @@ async function promptIntern() {
       {
         message: "Enter Intern's email:",
         name: "email",
+        //validate if the user input is an actual mail format
+        validate: function (email) {
+          valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+          if (valid) {
+            console.log("  valid email");
+            return true;
+          } else {
+            console.log("\n Please enter a valid email");
+            return false;
+          }
+        },
       },
       {
         message: "Enter Intern's school:",
