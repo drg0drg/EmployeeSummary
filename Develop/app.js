@@ -5,14 +5,14 @@ const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 const util = require("util");
+const boxen = require("boxen");
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 const writeFileAsync = util.promisify(fs.writeFile);
 employees = [];
 
-// function that creates team template
-async function generateTeam1() {
+async function generateTeam() {
   try {
     const { teamName } = await inquirer.prompt([
       {
@@ -20,7 +20,6 @@ async function generateTeam1() {
         name: "teamName",
       },
     ]);
-    await promptManager();
     await pickEmployeeType();
     const renderHTML = render(employees, teamName);
     writeFileAsync(outputPath, renderHTML);
@@ -28,9 +27,9 @@ async function generateTeam1() {
     console.log(error);
   }
 }
-generateTeam1();
-
-// function to determine if the next team member is either an Engineer or an Intern
+generateTeam();
+// function to determine what type of team member is next
+//it follows through with the corresponding questions for each type
 async function pickEmployeeType() {
   try {
     let continueAddingMember = await inquirer.prompt([
@@ -41,22 +40,26 @@ async function pickEmployeeType() {
         choices: ["Yes", "No"],
       },
     ]);
+    //while loop to ask for new member type and follow through with corresponding questions
+    //This loops up until user answers "No" to the question thus breaking the loop
     while (continueAddingMember.addOrQuit === "Yes") {
       let { employeeType } = await inquirer.prompt([
         {
           type: "list",
           message: "What type of employee is next ?",
           name: "employeeType",
-          choices: ["Engineer", "Intern"],
+          choices: ["Manager", "Engineer", "Intern"],
         },
       ]);
 
-      if (employeeType === "Engineer") {
+      if (employeeType === "Manager") {
+        await promptManager();
+      } else if (employeeType === "Engineer") {
         await promptEngineer();
       } else if (employeeType === "Intern") {
         await promptIntern();
       }
-
+      //prompt the question again to give user opportunity to quit the loop by selecting "No"
       continueAddingMember = await inquirer.prompt([
         {
           type: "list",
@@ -71,7 +74,7 @@ async function pickEmployeeType() {
   }
 }
 
-// function to prompt questions on Manager role
+// // function to prompt questions on Manager role
 async function promptManager() {
   try {
     const managerDetails = await inquirer.prompt([
@@ -92,6 +95,7 @@ async function promptManager() {
         name: "officeNumber",
       },
     ]);
+    //new "manager" object created from the parent class "Manager"
     const manager = new Manager(
       managerDetails.name,
       managerDetails.id,
@@ -103,7 +107,6 @@ async function promptManager() {
     console.log(error);
   }
 }
-// promptManager();
 
 // function to prompt questions on Engineer
 async function promptEngineer() {
@@ -126,6 +129,7 @@ async function promptEngineer() {
         name: "github",
       },
     ]);
+    //new "engineer" object created from the parent class "Engineer"
     const engineer = new Engineer(
       engineerDetails.name,
       engineerDetails.id,
@@ -159,7 +163,8 @@ async function promptIntern() {
         name: "school",
       },
     ]);
-    const intern = new Engineer(
+    //new "intern" object created from the parent class "Intern"
+    const intern = new Intern(
       internDetails.name,
       internDetails.id,
       internDetails.email,
