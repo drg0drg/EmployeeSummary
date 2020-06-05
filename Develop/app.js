@@ -4,58 +4,67 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const util = require("util");
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
+const writeFileAsync = util.promisify(fs.writeFile);
 employees = [];
 
 // function that creates team template
-async function generateTeam() {
+async function generateTeam1() {
   try {
-    const userInput = await promptAllQuestions();
-  } catch (error) {
-    console.log(error);
-  }
-}
-generateTeam();
-
-//function to prompt all questions
-async function promptAllQuestions() {
-  try {
-    await promptTeam();
+    const { teamName } = await inquirer.prompt([
+      {
+        message: "Enter Team's name:",
+        name: "teamName",
+      },
+    ]);
     await promptManager();
     await pickEmployeeType();
+    const renderHTML = render(employees, teamName);
+    writeFileAsync(outputPath, renderHTML);
   } catch (error) {
     console.log(error);
   }
 }
-
-//function to prompt questions on the specific team
-function promptTeam() {
-  return inquirer.prompt([
-    {
-      message: "Enter Team's name:",
-      name: "name",
-    },
-  ]);
-}
+generateTeam1();
 
 // function to determine if the next team member is either an Engineer or an Intern
 async function pickEmployeeType() {
   try {
-    let { employeeType } = await inquirer.prompt([
+    let continueAddingMember = await inquirer.prompt([
       {
         type: "list",
-        message: "What type of employee is next ?",
-        name: "employeeType",
-        choices: ["Engineer", "Intern"],
+        message: "Would you like to add another member ?",
+        name: "addOrQuit",
+        choices: ["Yes", "No"],
       },
     ]);
+    while (continueAddingMember.addOrQuit === "Yes") {
+      let { employeeType } = await inquirer.prompt([
+        {
+          type: "list",
+          message: "What type of employee is next ?",
+          name: "employeeType",
+          choices: ["Engineer", "Intern"],
+        },
+      ]);
 
-    if (employeeType === "Engineer") {
-      promptEngineer();
-    } else if (employeeType === "Intern") {
-      promptIntern();
+      if (employeeType === "Engineer") {
+        await promptEngineer();
+      } else if (employeeType === "Intern") {
+        await promptIntern();
+      }
+
+      continueAddingMember = await inquirer.prompt([
+        {
+          type: "list",
+          message: "Would you like to add another member ?",
+          name: "addOrQuit",
+          choices: ["Yes", "No"],
+        },
+      ]);
     }
   } catch (error) {
     console.log(error);
