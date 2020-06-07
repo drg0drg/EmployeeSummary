@@ -6,12 +6,14 @@ const path = require("path");
 const fs = require("fs");
 const util = require("util");
 const boxen = require("boxen");
+//Creating the "output" folder location where the final html page is generated
 const OUTPUT_DIR = path.resolve(__dirname, "output");
+//Creating the final "team.html" in "output" folder location file when app is run
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 const writeFileAsync = util.promisify(fs.writeFile);
 employees = [];
-
+//Function to generate the team organisation chart
 async function generateTeam() {
   try {
     if (!fs.existsSync("output")) {
@@ -43,8 +45,8 @@ async function pickEmployeeType() {
         choices: ["Yes", "No"],
       },
     ]);
-    //while loop to ask for new member type and follow through with corresponding questions
-    //This loops up until user answers "No" to the question thus breaking the loop
+    //<while> loop to ask for new member type and follow through with corresponding questions
+    //This loops until user answers "No" to the question thus breaking the loop
     while (continueAddingMember.addOrQuit === "Yes") {
       let { employeeType } = await inquirer.prompt([
         {

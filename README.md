@@ -8,9 +8,9 @@ It provides a template in which the user answers the questions in the terminal i
 
 The app builds classes for specific types of employees named _Manager_, _Engineer_ and _Intern_. Each class has characteristic attributes and methods by which `extends` the parent class _Employee_. All the tests in _test_ repo validate the correct structure needed for each class. 
 
-The structure allows for multiple team members to be added, each with the relevant info, while the app features email validation and doesn't let the user to skip questions or not to provide all the required data.
+The structure allows for multiple team members to be added, each with the relevant info. Should the user provide an erroneous email, an alert is prompted until the data has the proper format. Should the user skip questions, an error is thrown and the user can add the team member again.
 
-After the user answers the terminal questions, the app uses placeholders to pass the information in the HTML files in _templates_ repo and dynamically generates the final _team.html_ in newly created _output_ repo. 
+After the user answers the questions in terminal, the app uses placeholders to pass the information in the HTML files in _templates_ repo and dynamically generates the final _team.html_ in newly created _output_ repo. 
     
 
 ## Table of Contents
