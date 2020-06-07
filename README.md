@@ -51,6 +51,7 @@ Open the _team.html_ in your favourite browser.
 
 Demo: 
 
+![EmployeeSummaryGIF](https://user-images.githubusercontent.com/60710786/83978935-c21e0f00-a902-11ea-942e-eeba9cb1c8ef.gif)
 
 
     
