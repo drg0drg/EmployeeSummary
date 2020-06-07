@@ -3,7 +3,7 @@ const fs = require("fs");
 
 const templatesDir = path.resolve(__dirname, "../templates");
 
-const render = employees => {
+const render = (employees, teamName) => {
   const html = [];
 
   html.push(employees
@@ -19,7 +19,7 @@ const render = employees => {
     .map(intern => renderIntern(intern))
   );
 
-  return renderMain(html.join(""));
+  return renderMain(html.join(""), teamName);
 
 };
 
@@ -53,9 +53,12 @@ const renderIntern = intern => {
   return template;
 };
 
-const renderMain = html => {
-  const template = fs.readFileSync(path.resolve(templatesDir, "main.html"), "utf8");
-  return replacePlaceholders(template, "team", html);
+const renderMain = (html, teamName) => {
+  var htmlFinal = [];
+  var template = fs.readFileSync(path.resolve(templatesDir, "main.html"), "utf8");
+  htmlFinal = replacePlaceholders(template, "teamName", teamName);
+  htmlFinal = replacePlaceholders(htmlFinal, "team", html);
+  return htmlFinal;
 };
 
 const replacePlaceholders = (template, placeholder, value) => {
@@ -64,3 +67,4 @@ const replacePlaceholders = (template, placeholder, value) => {
 };
 
 module.exports = render;
+
