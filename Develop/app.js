@@ -154,6 +154,16 @@ async function promptEngineer() {
       {
         message: "Enter Engineer's github:",
         name: "github",
+        validate: function (github) {
+          valid = /github.com/.test(github);
+          if (valid) {
+            console.log("  valid account");
+            return true;
+          } else {
+            console.log("\n Please enter a valid github account");
+            return false;
+          }
+        },
       },
     ]);
     //new "engineer" object created from the parent class "Engineer"
